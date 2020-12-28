@@ -12,7 +12,7 @@ namespace RestaurantManager
         static IRepo<Product> _productRepo = new StockRepo(_dataProvider);
         static IRepo<MenuItem> _menuItemRepo = new MenuRepo(_dataProvider);
         static IRepo<Order> _ordersRepo = new OrdersRepo(_dataProvider);
-        static DisplayManager _displayManager = new DisplayManager(_dataProvider, _productRepo,
+        static DisplayManager _displayManager = new DisplayManager( _productRepo,
             _menuItemRepo, _ordersRepo);
 
         static void Main(string[] args)
@@ -24,6 +24,8 @@ namespace RestaurantManager
             Console.WriteLine();
             Console.WriteLine("Current stock:");
             _displayManager.DisplayStock();
+            _displayManager.DisplayMenu();
+            _displayManager.DisplayOrders();
             Console.WriteLine("Command list:\n");
             Console.WriteLine("display products/menuitems/orders - displays stock/menu/orders table");
             Console.WriteLine("create product/menuitem/order - creates product/menuitem/order");
@@ -32,12 +34,15 @@ namespace RestaurantManager
             Console.WriteLine("delete product/menuitem/order {id} - delete the specified by id product/menuitem/order");
             Console.WriteLine("exit - to exit the app");
 
-            Console.WriteLine("Please type a command to continue:");
-
             bool exitTriggered = false;
+            string strId = string.Empty;
+            string updateStr = string.Empty;
+            int id = 0;
+
             // Check for commands
             while (!exitTriggered)
-            {
+            {            
+                Console.WriteLine("Please type a command to continue:");
                 string command = Console.ReadLine().ToLower();
                 switch (command)
                 {
@@ -51,31 +56,102 @@ namespace RestaurantManager
                         _displayManager.DisplayOrders();
                         break;
                     case ("create product"):
+                        Console.WriteLine("Please provide information to add, separated by [,] character");
+                        updateStr = Console.ReadLine();
+                        _displayManager.CreateProduct(updateStr);
                         break;
                     case ("create menuitem"):
+                        Console.WriteLine("Please provide information to add, separated by [,] character");
+                        updateStr = Console.ReadLine();
+                        _displayManager.CreateMenuItem(updateStr);
                         break;
                     case ("create order"):
+                        Console.WriteLine("Please provide information to add, separated by [,] character");
+                        updateStr = Console.ReadLine();
+                        _displayManager.CreateOrder(updateStr);
                         break;
                     case ("show product"):
+                        Console.WriteLine("Please provide id of an item: ");
+                        strId = Console.ReadLine();
+                        if(_displayManager.IsIdValid(strId, out id))
+                        {
+                            _displayManager.ShowProduct(id);
+                        }
+
                         break;
                     case ("show menuitem"):
+                        Console.WriteLine("Please provide id of an item: ");
+                        strId = Console.ReadLine();
+                        if (_displayManager.IsIdValid(strId, out id))
+                        {
+                            _displayManager.ShowMenuItem(id);
+                        }
                         break;
                     case ("show order"):
+                        Console.WriteLine("Please provide id of an item: ");
+                        strId = Console.ReadLine();
+                        if (_displayManager.IsIdValid(strId, out id))
+                        {
+                            _displayManager.ShowOrder(id);
+                        }
                         break;
                     case ("edit product"):
+                        Console.WriteLine("Please provide id of an item: ");
+                        strId = Console.ReadLine();
+                        Console.WriteLine("Please provide information to update, separated by [,] character");
+                        updateStr = Console.ReadLine();
+                        if (_displayManager.IsIdValid(strId, out id))
+                        {
+                            _displayManager.EditProduct(id, updateStr);
+                        }
                         break;
                     case ("edit menuitem"):
+                        Console.WriteLine("Please provide id of an item: ");
+                        strId = Console.ReadLine();
+                        Console.WriteLine("Please provide information to update, separated by [,] character");
+                        updateStr = Console.ReadLine();
+                        if (_displayManager.IsIdValid(strId, out id))
+                        {
+                            _displayManager.EditMenuItem(id, updateStr);
+                        }
                         break;
                     case ("edit order"):
+                        Console.WriteLine("Please provide id of an item: ");
+                        strId = Console.ReadLine();
+                        Console.WriteLine("Please provide information to update, separated by [,] character");
+                        updateStr = Console.ReadLine();
+                        if (_displayManager.IsIdValid(strId, out id))
+                        {
+                            _displayManager.EditOrder(id, updateStr);
+                        }
                         break;
                     case ("delete product"):
+                        Console.WriteLine("Please provide id of an item: ");
+                        strId = Console.ReadLine();
+                        if (_displayManager.IsIdValid(strId, out id))
+                        {
+                            _displayManager.DeleteProduct(id);
+                        }
                         break;
                     case ("delete menuitem"):
+                        Console.WriteLine("Please provide id of an item: ");
+                        strId = Console.ReadLine();
+                        if (_displayManager.IsIdValid(strId, out id))
+                        {
+                            _displayManager.DeleteMenuItem(id);
+                        }
                         break;
                     case ("delete order"):
+                        Console.WriteLine("Please provide id of an item: ");
+                        strId = Console.ReadLine();
+                        if (_displayManager.IsIdValid(strId, out id))
+                        {
+                            _displayManager.DeleteOrder(id);
+                        }
                         break;
                     case ("exit"):
                         exitTriggered = true;
+                        _dataProvider.SaveChanges();
                         break;
                     default:
                         Console.WriteLine("The command entered is invalid! Try again");

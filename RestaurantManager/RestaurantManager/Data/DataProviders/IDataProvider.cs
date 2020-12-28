@@ -10,5 +10,7 @@ namespace RestaurantManager.Data.DataProviders
         public List<Product> StockProducts { get; set; }
         public List<MenuItem> MenuItems { get; set; }
         public List<Order> Orders { get; set; }
+
+        public void SaveChanges();
     }
 }

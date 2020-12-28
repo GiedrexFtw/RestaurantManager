@@ -86,5 +86,47 @@ namespace RestaurantManager.Data.DataProviders
                     this.Orders.Add(order);
             }
         }
+
+        public void SaveChanges()
+        {
+            // Getting rid of previous version of files
+            File.Delete(_stocksFileName);
+            File.Delete(_menuFileName);
+            File.Delete(_ordersFileName);
+
+            using (StreamWriter writer = new StreamWriter(_stocksFileName))
+            {
+                foreach (var item in this.StockProducts)
+                {
+                    var newLine = string.Format("{0},{1},{2},{3},{4}",
+                        item.Id, item.Name, item.PortionCount, item.Unit, item.PortionSize);
+                    writer.WriteLine(newLine);
+                }
+            }
+            using (StreamWriter writer = new StreamWriter(_menuFileName))
+            {
+                foreach (var item in this.MenuItems)
+                {
+                    StringBuilder productIds = new StringBuilder();
+                    item.Products.ForEach(x=>productIds.Append($"{x.Id} "));
+                    var newLine = string.Format("{0},{1},{2}",
+                        item.Id, item.Name, productIds);
+                    writer.WriteLine(newLine);
+                }
+            }
+            using (StreamWriter writer = new StreamWriter(_ordersFileName))
+            {
+               
+                foreach (var item in this.Orders)
+                { 
+                    StringBuilder menuItemIds = new StringBuilder();
+                    item.MenuItems.ForEach(x => menuItemIds.Append($"{x.Id} "));
+                    var newLine = string.Format("{0},{1},{2}",
+                        item.Id, item.Date, menuItemIds);
+                    writer.WriteLine(newLine);
+                }
+            }
+
+        }
     }
 }

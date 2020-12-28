@@ -2,6 +2,7 @@
 using RestaurantManager.Models;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 
 namespace RestaurantManager.Data.Repositories
@@ -21,23 +22,43 @@ namespace RestaurantManager.Data.Repositories
         }
         public MenuItem GetItemById(int id)
         {
-            return _dataProvider.MenuItems.Find(p => p.Id == id);
+            return _dataProvider.MenuItems.FirstOrDefault(p => p.Id == id);
         }
-        public void CreateItem(MenuItem item)
+        public bool CreateItem(MenuItem item)
         {
-            throw new NotImplementedException();
+            MenuItem lastEntry = _dataProvider.MenuItems.OrderByDescending(m => m.Id).FirstOrDefault();
+            if (lastEntry != null)
+            {
+                item.Id = lastEntry.Id + 1;
+                _dataProvider.MenuItems.Add(item);
+
+                return true;
+            }
+
+            return false;
         }
-        public void UpdateItem(MenuItem item, int id)
+        public bool UpdateItem(MenuItem item, int id)
         {
-            throw new NotImplementedException();
+            MenuItem menuItemToUpdate = GetItemById(id);
+            if (menuItemToUpdate != null)
+            {
+                menuItemToUpdate.Name = item.Name;
+                menuItemToUpdate.Products = item.Products;
+
+                return true;
+            }
+            return false;
         }
-        public void DeleteItem(int id)
+        public bool DeleteItem(int id)
         {
-            throw new NotImplementedException();
-        }
-        public void SaveChanges()
-        {
-            throw new NotImplementedException();
+            MenuItem menuItem = GetItemById(id);
+            if (menuItem != null)
+            {
+                _dataProvider.MenuItems.Remove(menuItem);
+
+                return true;
+            }
+            return false;
         }
     }
 }

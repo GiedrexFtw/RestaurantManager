@@ -8,9 +8,8 @@ namespace RestaurantManager.Data.Repositories
     {
         public IEnumerable<T> GetList();
         public T GetItemById(int id);
-        public void CreateItem(T item);
-        public void UpdateItem(T item, int id);
-        public void DeleteItem(int id);
-        public void SaveChanges();
+        public bool CreateItem(T item);
+        public bool UpdateItem(T item, int id);
+        public bool DeleteItem(int id);
     }
 }

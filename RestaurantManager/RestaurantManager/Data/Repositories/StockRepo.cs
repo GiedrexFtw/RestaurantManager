@@ -2,6 +2,7 @@
 using RestaurantManager.Models;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 
 namespace RestaurantManager.Data.Repositories
@@ -21,23 +22,45 @@ namespace RestaurantManager.Data.Repositories
         }
         public Product GetItemById(int id)
         {
-            return _dataProvider.StockProducts.Find(p => p.Id == id);
+            return _dataProvider.StockProducts.FirstOrDefault(p => p.Id == id);
         }
-        public void CreateItem(Product item)
+        public bool CreateItem(Product item)
         {
-            throw new NotImplementedException();
+            Product lastEntry = _dataProvider.StockProducts.OrderByDescending(m => m.Id).FirstOrDefault();
+            if(lastEntry != null)
+            {
+                item.Id = lastEntry.Id + 1;
+                _dataProvider.StockProducts.Add(item);
+
+                return true;
+            }
+
+            return false;
         }
-        public void UpdateItem(Product item, int id)
+        public bool UpdateItem(Product item, int id)
         {
-            throw new NotImplementedException();
+            Product productToUpdate = GetItemById(id);
+            if (productToUpdate != null)
+            {
+                productToUpdate.Name = item.Name;
+                productToUpdate.PortionCount = item.PortionCount;
+                productToUpdate.Unit = item.Unit;
+                productToUpdate.PortionSize = item.PortionSize;
+
+                return true;
+            }
+            return false;
         }
-        public void DeleteItem(int id)
+        public bool DeleteItem(int id)
         {
-            throw new NotImplementedException();
-        }
-        public void SaveChanges()
-        {
-            throw new NotImplementedException();
+            Product product = GetItemById(id);
+            if(product != null)
+            {
+                _dataProvider.StockProducts.Remove(product);
+
+                return true;
+            }
+            return false;
         }
     }
 }
