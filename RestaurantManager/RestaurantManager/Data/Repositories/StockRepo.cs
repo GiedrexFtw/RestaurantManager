@@ -7,7 +7,7 @@ using System.Text;
 
 namespace RestaurantManager.Data.Repositories
 {
-    class StockRepo : IRepo<Product>
+    public class StockRepo : IRepo<Product>
     {
         private readonly IDataProvider _dataProvider;
 
@@ -27,15 +27,18 @@ namespace RestaurantManager.Data.Repositories
         public bool CreateItem(Product item)
         {
             Product lastEntry = _dataProvider.StockProducts.OrderByDescending(m => m.Id).FirstOrDefault();
-            if(lastEntry != null)
+            if (lastEntry != null)
             {
                 item.Id = lastEntry.Id + 1;
-                _dataProvider.StockProducts.Add(item);
-
-                return true;
             }
+            else
+            {
+                item.Id = 1;
+            }
+            _dataProvider.StockProducts.Add(item);
 
-            return false;
+            return true;
+            
         }
         public bool UpdateItem(Product item, int id)
         {

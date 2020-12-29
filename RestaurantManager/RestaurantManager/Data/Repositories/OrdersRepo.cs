@@ -7,7 +7,7 @@ using System.Text;
 
 namespace RestaurantManager.Data.Repositories
 {
-    class OrdersRepo : IRepo<Order>
+    public class OrdersRepo : IRepo<Order>
     {
         private readonly IDataProvider _dataProvider;
 

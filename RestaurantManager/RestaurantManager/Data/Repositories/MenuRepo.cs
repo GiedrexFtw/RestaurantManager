@@ -7,7 +7,7 @@ using System.Text;
 
 namespace RestaurantManager.Data.Repositories
 {
-    class MenuRepo : IRepo<MenuItem>
+    public class MenuRepo : IRepo<MenuItem>
     {
         private readonly IDataProvider _dataProvider;
 
@@ -30,12 +30,14 @@ namespace RestaurantManager.Data.Repositories
             if (lastEntry != null)
             {
                 item.Id = lastEntry.Id + 1;
-                _dataProvider.MenuItems.Add(item);
-
-                return true;
             }
+            else
+            {
+                item.Id = 1;
+            }
+            _dataProvider.MenuItems.Add(item);
 
-            return false;
+            return true;
         }
         public bool UpdateItem(MenuItem item, int id)
         {

@@ -9,7 +9,7 @@ using System.Text;
 
 namespace RestaurantManager
 {
-    class DisplayManager
+    public class DisplayManager
     {
         // Dependency inject required repos for data manipulation
         private readonly IRepo<Product> _productRepo;
@@ -27,9 +27,9 @@ namespace RestaurantManager
         //Display functions
         public void DisplayStock()
         {
-            Console.WriteLine(new string('-', 50));
-            Console.WriteLine("| Id | Name | Portion Count | Unit | Portion Size |");
-            Console.WriteLine(new string('-', 50));
+            Console.WriteLine(new string('-', 77));
+            Console.WriteLine("| Id  | Name" + new string(' ', 22) + "| Portion Count | Unit       | Portion Size |");
+            Console.WriteLine(new string('-', 77));
             foreach (var product in _productRepo.GetList())
             {
                 Console.WriteLine(product.ToString());
@@ -38,7 +38,7 @@ namespace RestaurantManager
         public void DisplayMenu()
         {
             Console.WriteLine(new string('-', 50));
-            Console.WriteLine("| Id | Name | Products |");
+            Console.WriteLine("| Id  | Name" + new string(' ', 21) + "| Products |");
             Console.WriteLine(new string('-', 50));
             foreach (var menuItem in _menuRepo.GetList())
             {
@@ -48,7 +48,7 @@ namespace RestaurantManager
         public void DisplayOrders()
         {
             Console.WriteLine(new string('-', 50));
-            Console.WriteLine("| Id | Date | Menu Items |");
+            Console.WriteLine("| Id  | Date" + new string(' ', 22) + "| Menu Items |");
             Console.WriteLine(new string('-', 50));
             foreach (var order in _ordersRepo.GetList())
             {
@@ -95,15 +95,16 @@ namespace RestaurantManager
         {
             //Populate related products
             string[] properties = propertiesStr.Split(',');
-            List<int> productIds = properties[1].Split(' ')
-                .Select(str => int.TryParse(str, out int strId) ? strId : -1).ToList();
-            List<Product> products = _productRepo.GetList().Where(p => productIds.Contains(p.Id)).ToList();
+            
             //Check if all required data is provided
             if (properties.Length != typeof(MenuItem).GetProperties().Length - 1)
             {
                 Console.WriteLine("Required data not provided! You must provide all the fields!");
                 return;
             }
+            List<int> productIds = properties[1].Split(' ')
+                .Select(str => int.TryParse(str, out int strId) ? strId : -1).ToList();
+            List<Product> products = _productRepo.GetList().Where(p => productIds.Contains(p.Id)).ToList();
             MenuItem menuItem = new MenuItem
             {
                 Name = properties[0],
@@ -230,14 +231,15 @@ namespace RestaurantManager
         public void EditMenuItem(int id, string propertiesStr)
         {
             string[] properties = propertiesStr.Split(',');
-            List<int> productIds = properties[1].Split(' ')
-                .Select(str => int.TryParse(str, out int strId) ? strId : -1).ToList();
-            List<Product> products = _productRepo.GetList().Where(p => productIds.Contains(p.Id)).ToList();
+            
             if (properties.Length != typeof(MenuItem).GetProperties().Length - 1)
             {
                 Console.WriteLine("Required data not provided! You must provide all the fields!");
                 return;
             }
+            List<int> productIds = properties[1].Split(' ')
+                .Select(str => int.TryParse(str, out int strId) ? strId : -1).ToList();
+            List<Product> products = _productRepo.GetList().Where(p => productIds.Contains(p.Id)).ToList();
             MenuItem menuItem = new MenuItem
             {
                 Name = properties[0],

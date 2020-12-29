@@ -5,7 +5,7 @@ using System.Text;
 
 namespace RestaurantManager.Data.DataProviders
 {
-    interface IDataProvider
+    public interface IDataProvider
     {
         public List<Product> StockProducts { get; set; }
         public List<MenuItem> MenuItems { get; set; }
